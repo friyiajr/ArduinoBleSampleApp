@@ -44,6 +44,7 @@ export const Connect = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "black",
   },
   list: {
     marginTop: 30,

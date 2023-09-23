@@ -30,10 +30,10 @@ export const readColorFromDevice = createAsyncThunk(
   }
 );
 
-export const sendColorData = createAsyncThunk(
-  "bleThunk/sendColorData",
-  async (color: string, _) => {
-    await bluetoothLeManager.sendColor(color);
+export const sendAngleData = createAsyncThunk(
+  "bleThunk/sendAngleData",
+  async (newAngle: number, _) => {
+    await bluetoothLeManager.sendAngle(newAngle);
   }
 );
 
@@ -41,7 +41,8 @@ bleMiddleware.startListening({
   actionCreator: startScanning,
   effect: (_, listenerApi) => {
     bluetoothLeManager.scanForPeripherals((device) => {
-      if (device.name === "BLESIM") {
+      console.log("device", device);
+      if (device.name?.includes("Arduino") || device.name?.includes("Friyia")) {
         listenerApi.dispatch(setDevice(device));
       }
     });
@@ -52,6 +53,7 @@ bleMiddleware.startListening({
   actionCreator: startListening,
   effect: (_, listenerApi) => {
     bluetoothLeManager.startStreamingData(({ payload }) => {
+      console.log("payload", payload);
       if (typeof payload === "string") {
         listenerApi.dispatch(setRetrievedColor(payload));
       }

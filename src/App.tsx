@@ -12,6 +12,8 @@ import { store } from "./state/store";
 import { Connect } from "./screens/Connect/Connect";
 import { requestPermissions } from "./state/BluetoothLowEnergy/utils";
 
+import "react-native-gesture-handler";
+
 const App = () => {
   useEffect(() => {
     requestPermissions();
@@ -21,7 +23,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Notify" component={Notify} />
           <Stack.Screen name="Read" component={Read} />

@@ -11,10 +11,9 @@ export interface DeviceReference {
   id?: string;
 }
 
-const COLOR_SERVICE = "96e4d99a-066f-444c-b67c-112345e3b1a2";
-const COLOR_CHARACTARISTIC_NOTIFY = "7c0209c0-93f0-437a-828a-a58379b230c4";
-const COLOR_CHARACTARISTIC_WRITE = "1b3dcc2d-cc56-4b47-b6c2-13745858c7df";
-const COLOR_CHARACTARISTIC_READ = "3d84e60b-90d0-40d4-993a-1b83424cb868";
+const COLOR_SERVICE = "19b10000-e8f2-537e-4f6c-d104768a1214";
+const COLOR_CHARACTARISTIC_WRITE = "19b10001-e8f2-537e-4f6c-d104768a1215";
+const COLOR_CHARACTARISTIC_NOTIFY = "19b10001-e8f2-537e-4f6c-d104768a1216";
 
 class BluetoothLeManager {
   bleManager: BleManager;
@@ -51,7 +50,7 @@ class BluetoothLeManager {
       const rawColor = await this.bleManager.readCharacteristicForDevice(
         this.device?.id ?? "",
         COLOR_SERVICE,
-        COLOR_CHARACTARISTIC_READ
+        ""
       );
       return base64.decode(rawColor.value!);
     } catch (e) {
@@ -59,8 +58,8 @@ class BluetoothLeManager {
     }
   };
 
-  sendColor = async (color: string) => {
-    const data = base64.encode(color);
+  sendAngle = async (newAngle: number) => {
+    const data = base64.encode(newAngle.toString());
     try {
       await this.bleManager.writeCharacteristicWithResponseForDevice(
         this.device?.id ?? "",
@@ -73,7 +72,7 @@ class BluetoothLeManager {
     }
   };
 
-  onColorUpdate = (
+  onAngleUpdate = (
     error: BleError | null,
     charactaristic: Characteristic | null,
     emitter: (bleValue: { payload: string | BleError }) => void
@@ -95,7 +94,8 @@ class BluetoothLeManager {
         COLOR_SERVICE,
         COLOR_CHARACTARISTIC_NOTIFY,
         (error, charactaristic) => {
-          this.onColorUpdate(error, charactaristic, emitter);
+          console.log("NOTIFY");
+          this.onAngleUpdate(error, charactaristic, emitter);
         }
       );
     }
